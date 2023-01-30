@@ -24,17 +24,12 @@ public class Elevator : MonoBehaviour
     {
         if (_isActive && enabled)
         {
-            transform.position = Vector3.MoveTowards(transform.position, _endPos, SPEED * Time.deltaTime);
-            _playerMovement.gameObject.transform.position = _elevatorGround.transform.position + new Vector3(0, .1f, 0);
+            Move();
         }
 
         if (enabled && transform.position == _endPos)
         {
-            _playerMovement.GetComponent<Rigidbody>().isKinematic = false;
-            _playerMovement.UnlockMovement();
-            _playerMovement = null;
-            Debug.Log("Приехал");
-            enabled = false;
+            LeavePlayer();
         }
     }
 
@@ -47,6 +42,22 @@ public class Elevator : MonoBehaviour
             _playerMovement.GetComponent<Rigidbody>().isKinematic = true;
             _playerMovement.LockMovement();
         }
+    }
+
+    private void Move()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, _endPos, SPEED * Time.deltaTime);
+        _playerMovement.gameObject.transform.position = _elevatorGround.transform.position + new Vector3(0, .1f, 0);
+    }
+
+    private void LeavePlayer()
+    {
+        _playerMovement.transform.position = _elevatorGround.transform.position + new Vector3(0, .1f, 1.5f);
+        _playerMovement.GetComponent<Rigidbody>().isKinematic = false;
+        _playerMovement.UnlockMovement();
+        _playerMovement = null;
+        Debug.Log("Приехал");
+        enabled = false;
     }
 
 #if UNITY_EDITOR

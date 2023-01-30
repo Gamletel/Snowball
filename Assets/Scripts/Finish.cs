@@ -1,7 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Cinemachine;
 
 public class Finish : MonoBehaviour
@@ -14,44 +13,78 @@ public class Finish : MonoBehaviour
 
     [SerializeField] private Transform _finishPoint;
     [SerializeField] private CinemachineVirtualCamera _finishCam;
-    private PlayerMovement _playerMovement;
-    private const float SPEED = 2f;
+    [SerializeField] private CinemachineVirtualCamera _loseFinishCam;
+    private const float SPEED = 20f;
     private Vector3 _snowballEndPos;
 
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.TryGetComponent(out PlayerMovement playerMovement))
         {
-            _playerMovement = playerMovement;
             playerFinish?.Invoke();
-            StartCoroutine(StartFinishihg());
+            StartCoroutine(StartFinishihg(playerMovement));
+        }
+
+        if(collision.gameObject.TryGetComponent(out BotMovement botMovement))
+        {
+            BotFinished(botMovement);
         }
     }
 
-    private IEnumerator StartFinishihg()
+    private void BotFinished(BotMovement botMovement)
+    {
+        Debug.Log("Бот финишировал!");
+        _loseFinishCam.Follow = botMovement.transform;
+        _loseFinishCam.LookAt = botMovement.transform;
+        _loseFinishCam.Priority = 15;
+        botMovement.LockMovement();
+        botMovement.enabled = false;
+        botMovement.GetComponent<Animator>().SetTrigger("Finished");
+        botMovement.GetComponent<Rigidbody>().isKinematic = true;
+        botMovement.GetComponentInChildren<BotSnowball>().gameObject.SetActive(false);
+        botMovement.transform.rotation = Quaternion.Euler(0, 180, 0);
+        StartCoroutine(RestartCountDown());
+    }
+
+    private IEnumerator RestartCountDown(int timeTiRestart = 5)
+    {
+        yield return new WaitForSeconds(timeTiRestart);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private IEnumerator StartFinishihg(PlayerMovement playerMovement)
     {
         Debug.Log("Финишировал!");
 
-        var pos = _playerMovement.Snowball.transform.localScale.z * 10;
+        _finishCam.Follow = playerMovement.GetComponentInChildren<Snowball>().transform;
+        _finishCam.LookAt = playerMovement.GetComponentInChildren<Snowball>().transform;
+        _finishCam.Priority = 15;
+        playerMovement.LockMovement(false);
+        playerMovement.enabled = false;
+
+        var pos = playerMovement.Snowball.transform.localScale.z * 10;
         _snowballEndPos = _finishPoint.position + new Vector3(0, 0, pos);
 
-        while(_playerMovement.transform.position != _finishPoint.position)
+        playerMovement.GetComponent<Animator>().SetFloat("Speed", 3);
+
+        while(playerMovement.transform.position != _finishPoint.position)
         {
-            _playerMovement.transform.position = Vector3.MoveTowards(_playerMovement.transform.position, _finishPoint.position, SPEED * Time.deltaTime);
+            playerMovement.transform.position = Vector3.MoveTowards(playerMovement.transform.position, _finishPoint.position, SPEED * Time.deltaTime);
             yield return new WaitForSeconds(.001f);
         }
-        _playerMovement.GetComponent<Animator>().SetFloat("Speed", 0);
+
+        playerMovement.GetComponent<Animator>().SetFloat("Speed", 0);
 
         yield return new WaitForSeconds(1f);
-        _playerMovement.GetComponent<Animator>().SetTrigger("Kick");
+        playerMovement.GetComponent<Animator>().SetTrigger("Kick");
         _finishCam.Priority = 15;
         _finishCam.enabled = true;
 
-        while (_playerMovement.Snowball.transform.position != _snowballEndPos)
+        while (playerMovement.Snowball.transform.position != _snowballEndPos)
         {
-            
-            _playerMovement.Snowball.transform.position = Vector3.MoveTowards(_playerMovement.Snowball.transform.position, _snowballEndPos, SPEED * Time.deltaTime);
-            _playerMovement.Snowball.transform.Rotate(Vector3.forward * SPEED);
+
+            playerMovement.Snowball.transform.position = Vector3.MoveTowards(playerMovement.Snowball.transform.position, _snowballEndPos, SPEED * Time.deltaTime);
+            playerMovement.Snowball.transform.Rotate(Vector3.forward * SPEED);
             yield return new WaitForSeconds(.001f);
         }
 

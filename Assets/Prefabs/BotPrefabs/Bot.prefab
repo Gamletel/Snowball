@@ -163,7 +163,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
@@ -181,7 +181,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxScale: 1.5
-  _snowTrail: {fileID: 4870954884623932176}
   _scale: 0.001
   OnTheGround: 0
 --- !u!114 &480260618320786828
@@ -1462,6 +1461,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5172886908372558731}
   - component: {fileID: 3102545946612240461}
+  - component: {fileID: 2804073252019404309}
   m_Layer: 3
   m_Name: Humanoid.058
   m_TagString: Untagged
@@ -1586,6 +1586,18 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: 0.19916147, z: -0.049528807}
     m_Extent: {x: 0.5261609, y: 0.7003396, z: 0.34795377}
   m_DirtyAABB: 0
+--- !u!114 &2804073252019404309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6193825270332040779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85dfb80edee898147a9601e07dd0def7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6322979677119412995
 GameObject:
   m_ObjectHideFlags: 0
@@ -1836,7 +1848,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7773830078428267976}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.03, z: 0}
+  m_LocalPosition: {x: 0, y: -0.042, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1854,7 +1866,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.1, y: 1, z: 0.06}
+  m_Size: {x: 0.23, y: 1, z: 0.12}
   m_Center: {x: 0, y: 0.45, z: 0}
 --- !u!1 &7805465020441083692
 GameObject:
@@ -2173,10 +2185,5 @@ PrefabInstance:
 --- !u!4 &1246969880037217922 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7283598248235894623, guid: 51ac426b3a52d0e4da0f3d815bfd727b, type: 3}
-  m_PrefabInstance: {fileID: 8384201103876084189}
-  m_PrefabAsset: {fileID: 0}
---- !u!96 &4870954884623932176 stripped
-TrailRenderer:
-  m_CorrespondingSourceObject: {fileID: 4018250814338255565, guid: 51ac426b3a52d0e4da0f3d815bfd727b, type: 3}
   m_PrefabInstance: {fileID: 8384201103876084189}
   m_PrefabAsset: {fileID: 0}

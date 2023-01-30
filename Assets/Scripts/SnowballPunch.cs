@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class SnowballPunch : MonoBehaviour
 {
-    private const int FORCE = 7;
+    private const int FORCE = 3;
     private const int COOLDOWN = 1;
     private bool _isBot;
     private bool _canBePunched = true;
@@ -59,26 +59,27 @@ public class SnowballPunch : MonoBehaviour
     {
         if (_canBePunched)
         {
+            var direction = transform.TransformDirection(Vector3.back) + Vector3.up * 0.5f;
+
             if (_isBot && botSnowball == null && _snowball.transform.localScale.z > _botSnowball.transform.localScale.z
                 || _isBot && botSnowball != null && botSnowball.transform.localScale.z > _botSnowball.transform.localScale.z)
             {
+                _rb.AddForce(direction * FORCE, ForceMode.Impulse);
                 StartCoroutine(DisableAgent());
                 _botSnowball.ResetSnowball();
             }
 
             if (!_isBot && botSnowball.transform.localScale.z > _snowball.transform.localScale.z)
             {
+                _rb.AddForce(direction * FORCE, ForceMode.Impulse);
                 StartCoroutine(DisablePlayer());
                 _snowball.ResetSnowball();
             }
-
-            var direction = transform.TransformDirection(Vector3.back) + Vector3.up * 0.5f;
-            _rb.AddForce(direction * FORCE, ForceMode.Impulse);
         }
 
         StartCoroutine(PunchCooldown());
 
-        Debug.Log($"{name}: Ударил!");
+        Debug.Log($"{name}: Меня ударили!");
     }
 
     private IEnumerator PunchCooldown()
@@ -92,9 +93,11 @@ public class SnowballPunch : MonoBehaviour
     {
         _botRollingSnowball.enabled = false;
         _agent.enabled = false;
+        _rb.useGravity = true;
 
         yield return new WaitForSeconds(COOLDOWN);
 
+        _rb.useGravity = false;
         _botRollingSnowball.enabled = true;
         _agent.enabled = true;
     }

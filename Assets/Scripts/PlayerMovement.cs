@@ -5,7 +5,8 @@ public class PlayerMovement : MonoBehaviour
 {
     [HideInInspector] public Snowball Snowball;
     [SerializeField] private DynamicJoystick _moveJoystick;
-    [SerializeField] private int _speed;
+    [SerializeField] private float _speed;
+    private float _startSpeed;
     private TrailRenderer _snowTrail;
     private Rigidbody _rb;
     private Animator _animator;
@@ -15,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
+        _startSpeed = _speed;
         _snowTrail = GetComponentInChildren<TrailRenderer>();
         _rb = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
@@ -45,11 +47,31 @@ public class PlayerMovement : MonoBehaviour
         _animator.SetFloat(_speedHash, _rb.velocity.magnitude);
     }
 
+    /// <summary>
+    /// Increase Player's speed
+    /// </summary>
+    /// <param name="speed">Speed multiplier</param>
+    public void IncreaseSpeed(float speed)
+    {
+        _speed *= speed;
+        Debug.Log("Скорость увеличена!");
+    }
+
+    /// <summary>
+    /// Decreas Player's speed
+    /// </summary>
+    /// <param name="speed">Speed multiplier</param>
+    public void DecreaseSpeed(float speed)
+    {
+        _speed /= speed;
+    }
+
     public void UnlockMovement()
     {
-        if (Snowball.enabled == true)
-            _snowTrail.emitting = true;
+        if (Snowball.GetComponent<MeshRenderer>().enabled == false)
+            Snowball.GetComponent<MeshRenderer>().enabled = true;
 
+        _snowTrail.emitting = true;
         _moveJoystick.DeadZone = 0;
         _canMove = true;
         _rb.velocity = Vector3.zero;

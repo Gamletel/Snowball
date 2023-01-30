@@ -15,13 +15,18 @@ public class BotMovement : MonoBehaviour
     private NavMeshPath _path;
     private BotRollingSnowball _rollingSnowball;
     private BotSnowball _snowball;
-    private const int SPEED = 3;
+    private Rigidbody _rb;
+    private float _speed = 3;
 
     private void Awake()
     {
+        _rb = GetComponent<Rigidbody>();
         _snowTrail = GetComponentInChildren<TrailRenderer>();
         _agent = GetComponent<NavMeshAgent>();
-        _agent.speed = SPEED;
+
+        _speed = Random.Range(2.5f, 3f);
+
+        _agent.speed = _speed;
         _path = new NavMeshPath();
         _rollingSnowball = GetComponent<BotRollingSnowball>();
         _snowball = GetComponentInChildren<BotSnowball>();
@@ -39,7 +44,8 @@ public class BotMovement : MonoBehaviour
             GoToNextCheckpoint();
         }
 
-        if (transform.position == _agent.destination && _rollingSnowball.OnTheGround && !_haveCheckpoint)
+        if (transform.position == _agent.destination && _rollingSnowball.OnTheGround && !_haveCheckpoint
+            || _haveCheckpoint && _rollingSnowball.OnTheGround && transform.position == _agent.destination)
         {
             RandomizeMovePoint();
         }
@@ -62,6 +68,7 @@ public class BotMovement : MonoBehaviour
     public void GoToPrevCheckpoint()
     {
         _curCheckpointID--;
+        Debug.Log($"Возвращаюсь в чекпоинту #{_curCheckpointID}" + _checkpoints[_curCheckpointID].name);
         _haveCheckpoint = false;
         RandomizeMovePoint();
     }
@@ -80,8 +87,8 @@ public class BotMovement : MonoBehaviour
         {
             _movePoint = _checkpoints[_curCheckpointID].transform.position + new Vector3(
                 Random.Range(-5f, 5f),
-                0,
-                Random.Range(-5f, 5f)
+                0.5f,
+                Random.Range(-5f, 5f) / (15 / _checkpoints[_curCheckpointID].transform.localScale.z)
                 );
             _agent.CalculatePath(_movePoint, _path);
         } while (_path.status == NavMeshPathStatus.PathPartial || _path.status == NavMeshPathStatus.PathInvalid);
@@ -93,6 +100,7 @@ public class BotMovement : MonoBehaviour
     {
         _snowTrail.emitting = false;
         _agent.enabled = false;
+        
     }
 
     public void UnlockMovement()
@@ -103,9 +111,22 @@ public class BotMovement : MonoBehaviour
         _agent.enabled = true;
     }
 
-    public void IncreaseSpeed(int speed)
+    /// <summary>
+    /// Increase Bot's speed
+    /// </summary>
+    /// <param name="speed">Speed multiplier</param>
+    public void IncreaseSpeed(float speed)
     {
-        _agent.speed = speed;
+        _agent.speed *= speed;
+    }
+
+    /// <summary>
+    /// Decrease Bot's speed
+    /// </summary>
+    /// <param name="speed">Speed multiplier</param>
+    public void DecreaseSpeed(float speed)
+    {
+        _agent.speed /= speed;
     }
 
     private void OnDrawGizmos()

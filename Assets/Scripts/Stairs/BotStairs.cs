@@ -23,26 +23,22 @@ public class BotStairs : MonoBehaviour
 
     public void AddStep(BotRollingSnowball botRollingSnowball)
     {
-        if (botRollingSnowball.CanUnroll())
+        botRollingSnowball.FixedUnroll(SCALE);
+        _steps[_curStep].SetActive(true);
+
+        if (_curStep >= _steps.Length - 1)
         {
+            _obstacle.carving = false;
             botRollingSnowball.FixedUnroll(SCALE);
             _steps[_curStep].SetActive(true);
-
-            if (_curStep == _steps.Length - 1)
-            {
-                _obstacle.enabled = false;
-                botRollingSnowball.FixedUnroll(SCALE);
-                _steps[_curStep].SetActive(true);
-                botRollingSnowball.GetComponent<BotMovement>().GoToNextCheckpoint();
-                enabled = false;
-                return;
-            }
-
-            _curStep++;
-            _stairsFillCollider.transform.position = _steps[_curStep].transform.position;
-            botRollingSnowball.GetComponent<BotMovement>().UpdateCheckpoint();
+            botRollingSnowball.GetComponent<BotMovement>().GoToNextCheckpoint();
+            _stairsFillCollider.gameObject.SetActive(false);
+            enabled = false;
+            return;
         }
-        else
-            botRollingSnowball.GetComponent<BotMovement>().GoToPrevCheckpoint();
+
+        _curStep++;
+        _stairsFillCollider.transform.position = _steps[_curStep].transform.position;
+        botRollingSnowball.GetComponent<BotMovement>().UpdateCheckpoint();
     }
 }

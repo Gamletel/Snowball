@@ -6,6 +6,7 @@ public class BotRollingSnowball : MonoBehaviour
 {
     [HideInInspector] public float MaxScale = MAX_SCALE;
     [SerializeField] private float _scale;
+    private bool _snowballIsActive;
     private TrailRenderer _snowTrail;
     private BotSnowball _snowball;
     private BotMovement _movement;
@@ -30,15 +31,19 @@ public class BotRollingSnowball : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_snowball.transform.localScale.x >= ACTIVATION_SCALE)
+        if (_snowball.transform.localScale.x >= ACTIVATION_SCALE  && !_snowballIsActive)
         {
             _snowball.gameObject.SetActive(true);
             _animator.SetHaveSnowball(true);
+            _snowTrail.emitting = true;
+            _snowballIsActive = true;
         }
-        else
+        else if(_snowball.transform.localScale.x <= ACTIVATION_SCALE && _snowballIsActive)
         {
             _snowball.gameObject.SetActive(false);
             _animator.SetHaveSnowball(false);
+            _snowTrail.emitting = false;
+            _snowballIsActive = false;
         }
 
         if (_agent.velocity == Vector3.zero)

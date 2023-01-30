@@ -54,6 +54,7 @@ public class BotElevator : MonoBehaviour
         _botMovement.transform.position = _elevatorGround.transform.position + new Vector3(0, .1f, 1.5f);
         _botMovement.GetComponent<NavMeshAgent>().enabled = true;
         _botMovement.GoToNextCheckpoint();
+        _botMovement.RandomizeMovePoint();
         enabled = false;
     }
 

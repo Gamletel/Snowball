@@ -25,8 +25,10 @@ public class Stairs : MonoBehaviour
             _steps[_curStep].SetActive(true);
             if (_curStep >= _steps.Length - 1)
             {
+                Debug.Log("Лестница заполнена!");
                 playerMovement.GetComponent<RollingSnowball>().FixedUnroll(SCALE);
                 _steps[_curStep].SetActive(true);
+                _stairsFillCollider.gameObject.SetActive(false);
                 enabled = false;
                 return;
             }

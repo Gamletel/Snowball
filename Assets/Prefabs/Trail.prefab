@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7283598248235894623}
   - component: {fileID: 4018250814338255565}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -82,8 +82,8 @@ TrailRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
-        value: 0.33462012
+        time: 0.0032806396
+        value: 0.42552596
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -95,8 +95,8 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
+      key0: {r: 0.7735849, g: 0.7735849, b: 0.7735849, a: 1}
+      key1: {r: 0.7764706, g: 0.7764706, b: 0.7764706, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -125,9 +125,9 @@ TrailRenderer:
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 1
-    textureMode: 1
+    textureMode: 3
     shadowBias: 0.5
-    generateLightingData: 0
+    generateLightingData: 1
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
-  m_Emitting: 0
+  m_Emitting: 1

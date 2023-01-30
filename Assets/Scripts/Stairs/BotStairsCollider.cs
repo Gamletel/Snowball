@@ -9,8 +9,15 @@ public class BotStairsCollider : MonoBehaviour
     {
         if (other.TryGetComponent(out BotRollingSnowball botRollingSnowball))
         {
-            _stairs.AddStep(botRollingSnowball);
-            Debug.LogWarning("Ступень заполнена!");
+            if (botRollingSnowball.CanUnroll())
+            {
+                _stairs.AddStep(botRollingSnowball);
+                Debug.LogWarning("Ступень заполнена!");
+            }
+            else
+            {
+                botRollingSnowball.GetComponent<BotMovement>().GoToPrevCheckpoint();
+            }
         }
     }
 }

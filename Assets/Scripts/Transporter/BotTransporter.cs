@@ -25,8 +25,8 @@ public class BotTransporter : MonoBehaviour
         if(other.TryGetComponent(out BotMovement botMovement) && !_isCatched)
         {
             _botMovement = botMovement;
-            _botMovement.GoToNextCheckpoint();
             _botMovement.LockMovement();
+            _botMovement.GoToNextCheckpoint();
 
             if (_isBotSitting)
                 _botMovement.GetComponent<Animator>().SetBool("Sitting", true);
